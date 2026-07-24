@@ -8,6 +8,7 @@ extern volatile unsigned long Sys_Tick;
 void Motor_Init(void)
 {
     Macro_Set_Bit(RCC->AHB1ENR, 0U); // GPIOA 클럭 활성화
+    Macro_Write_Block(GPIOA->PUPDR, 0x3U, 0x2U, 10U); // floating 노이즈 제거
 
     // PA0, PA1 초기 출력값 0V(Low) 설정
     Macro_Clear_Bit(GPIOA->ODR, 0U);
