@@ -134,6 +134,7 @@ static void On_Short_Click(MotorController *motor)
 		break;
 	}
 
+	printf("[KEY] Short Click -> Motor State: %d (Duty: %d%%)\n", motor->state, motor->duty);
 	Motor_Update(motor);
 }
 
@@ -141,5 +142,6 @@ static void On_Short_Click(MotorController *motor)
 static void On_Long_Click(MotorController *motor)
 {
 	motor->state = MOTOR_STATE_STOP;
+	printf("[KEY] Long Click -> Motor STOP\n");
 	Motor_Update(motor);
 }
