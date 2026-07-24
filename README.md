@@ -185,29 +185,53 @@ stateDiagram-v2
 
 # 7. 전체 동작 흐름
 전원 인가
+
 ↓
+
 crt0.s 실행
+
 ↓
+
 Main() 호출
+
 ↓
+
 96MHz 시스템 클럭 설정
+
 ↓
+
 USART2 115200bps 설정
+
 ↓
+
 TIM2 롱클릭 Timer 설정
+
 ↓
+
 TIM4 1ms Tick Timer 설정
+
 ↓
+
 TIM5 20kHz PWM 설정
+
 ↓
+
 PC13 버튼 Input 설정
+
 ↓
-PA0, PA1 모터 제어 핀 설정
+
+PA0, PA1 모터 제어핀 설정
+
 ↓
+
 USART2 RX 인터럽트 활성화
+
 ↓
+
 모터 STOP 상태 적용
+
 ↓
+
 무한 반복
 ├─ UART 명령 확인
 ├─ 버튼 상태 머신 실행
