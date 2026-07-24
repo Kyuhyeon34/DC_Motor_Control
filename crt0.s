@@ -1,10 +1,78 @@
-	.syntax unified
+.syntax unified
 	.thumb
 	.text
 
-	.word	0x20020000
-	.word	__start
+	/* ===== Interrupt Vector Table ===== */
+	.word	0x20020000        /* 0 : Initial SP */
+	.word	__start           /* 1 : Reset (기존 그대로) */
+	.word	Default_Handler   /* 2 : NMI */
+	.word	Default_Handler   /* 3 : HardFault */
+	.word	Default_Handler   /* 4 : MemManage */
+	.word	Default_Handler   /* 5 : BusFault */
+	.word	Default_Handler   /* 6 : UsageFault */
+	.word	0                 /* 7 : Reserved */
+	.word	0                 /* 8 : Reserved */
+	.word	0                 /* 9 : Reserved */
+	.word	0                 /* 10: Reserved */
+	.word	Default_Handler   /* 11: SVCall */
+	.word	Default_Handler   /* 12: DebugMon */
+	.word	0                 /* 13: Reserved */
+	.word	Default_Handler   /* 14: PendSV */
+	.word	Default_Handler   /* 15: SysTick */
 
+	/* ===== External Interrupts (IRQ0 ~ IRQ40) ===== */
+	.word	Default_Handler   /* IRQ0  */
+	.word	Default_Handler   /* IRQ1  */
+	.word	Default_Handler   /* IRQ2  */
+	.word	Default_Handler   /* IRQ3  */
+	.word	Default_Handler   /* IRQ4  */
+	.word	Default_Handler   /* IRQ5  */
+	.word	Default_Handler   /* IRQ6  */
+	.word	Default_Handler   /* IRQ7  */
+	.word	Default_Handler   /* IRQ8  */
+	.word	Default_Handler   /* IRQ9  */
+	.word	Default_Handler   /* IRQ10 */
+	.word	Default_Handler   /* IRQ11 */
+	.word	Default_Handler   /* IRQ12 */
+	.word	Default_Handler   /* IRQ13 */
+	.word	Default_Handler   /* IRQ14 */
+	.word	Default_Handler   /* IRQ15 */
+	.word	Default_Handler   /* IRQ16 */
+	.word	Default_Handler   /* IRQ17 */
+	.word	Default_Handler   /* IRQ18 */
+	.word	Default_Handler   /* IRQ19 */
+	.word	Default_Handler   /* IRQ20 */
+	.word	Default_Handler   /* IRQ21 */
+	.word	Default_Handler   /* IRQ22 */
+	.word	Default_Handler   /* IRQ23 (EXTI9_5) */
+	.word	Default_Handler   /* IRQ24 */
+	.word	Default_Handler   /* IRQ25 */
+	.word	Default_Handler   /* IRQ26 */
+	.word	Default_Handler   /* IRQ27 */
+	.word	TIM2_IRQHandler   /* IRQ28 (TIM2)   <- 실제 핸들러 */
+	.word	Default_Handler   /* IRQ29 */
+	.word	TIM4_IRQHandler   /* IRQ30 (TIM4)   <- 실제 핸들러 */
+	.word	Default_Handler   /* IRQ31 */
+	.word	Default_Handler   /* IRQ32 */
+	.word	Default_Handler   /* IRQ33 */
+	.word	Default_Handler   /* IRQ34 */
+	.word	Default_Handler   /* IRQ35 */
+	.word	Default_Handler   /* IRQ36 */
+	.word	Default_Handler   /* IRQ37 */
+	.word	USART2_IRQHandler /* IRQ38 (USART2) <- 실제 핸들러 */
+	.word	Default_Handler   /* IRQ39 */
+	.word	EXTI15_10_IRQHandler /* IRQ40 (EXTI15_10) <- 실제 핸들러 */
+
+	.extern	TIM2_IRQHandler
+	.extern	TIM4_IRQHandler
+	.extern	USART2_IRQHandler
+	.extern	EXTI15_10_IRQHandler
+
+	.thumb_func
+Default_Handler:
+	B	.
+
+	/* ===== 기존 __start 코드, 전혀 수정 안 함 ===== */
 	.global	__start
   	.type 	__start, %function
 __start:

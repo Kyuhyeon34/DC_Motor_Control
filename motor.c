@@ -2,56 +2,47 @@
 #include "motor.h"
 #include "timer.h"
 
+extern volatile unsigned long Sys_Tick;
+
+// 모터 제어 GPIO(PA0, PA1) 초기화
 void Motor_Init(void)
 {
-    // GPIOA 클럭 활성화
-    Macro_Set_Bit(RCC->AHB1ENR, 0U);
+    Macro_Set_Bit(RCC->AHB1ENR, 0U); // GPIOA 클럭 활성화
 
-    // PA0, PA1 ODR 비트를 0V(Low)로 한 번만 초기화
+    // PA0, PA1 초기 출력값 0V(Low) 설정
     Macro_Clear_Bit(GPIOA->ODR, 0U);
     Macro_Clear_Bit(GPIOA->ODR, 1U);
 }
 
+// 모터 정지 (PA0, PA1 모두 Output 모드 0V)
 void Motor_Stop(void)
 {
-    // PA0, PA1 둘 다 Output 모드
-    Macro_Write_Block(GPIOA->MODER, 0xFU, 0x5U, 0U);
+    unsigned long start_tick = Sys_Tick;
 
-    TIM4_Delay(STOP_DELAY_MS);
+    Macro_Write_Block(GPIOA->MODER, 0xFU, 0x5U, 0U);
+    while ((Sys_Tick - start_tick) < STOP_DELAY_MS)
+        ;
 }
 
+// 모터 정회전 설정
 void Motor_Forward(int duty)
 {
     Motor_Stop();
 
-    // kick start
-    // TIM5_Set_Duty(0, 100);
-    // Macro_Write_Block(GPIOA->MODER, 0xFU, 0x9U, 0U);
-    // TIM4_Delay(50);
-
-    // PWM 듀티 설정
     TIM5_Set_Duty(0, duty);
-
-    // PA0: Output Mode, PA1: Alternate Function Mode
-    Macro_Write_Block(GPIOA->MODER, 0xFU, 0x9U, 0U);
+    Macro_Write_Block(GPIOA->MODER, 0xFU, 0x9U, 0U); // PA0: Output(0V), PA1: AF(PWM)
 }
 
+// 모터 역회전 설정
 void Motor_Reverse(int duty)
 {
     Motor_Stop();
 
-    // kick start
-    // TIM5_Set_Duty(100, 0);
-    // Macro_Write_Block(GPIOA->MODER, 0xFU, 0x9U, 0U);
-    // TIM4_Delay(50);
-
-    // PWM 듀티 설정
     TIM5_Set_Duty(duty, 0);
-
-    // PA0: Alternate Function Mode, PA1: Output Mode
-    Macro_Write_Block(GPIOA->MODER, 0xFU, 0x6U, 0U);
+    Macro_Write_Block(GPIOA->MODER, 0xFU, 0x6U, 0U); // PA0: AF(PWM), PA1: Output(0V)
 }
 
+// 모터 컨트롤러 상태 업데이트
 void Motor_Update(const MotorController *motor)
 {
     switch (motor->state)

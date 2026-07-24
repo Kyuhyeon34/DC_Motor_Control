@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+volatile int Uart_Data_In = 0;
+volatile unsigned char Uart_Data = 0;
+
 void Uart2_Init(int baud)
 {
   double div;
@@ -57,15 +60,30 @@ char Uart2_Receive_Byte(void)
   return (char)USART2->DR;
 }
 
-char Uart2_Get_Pressed(void)
+// UART 수신 1바이트 읽기 (비블로킹)
+char Uart2_Read_Byte(void)
 {
-  if (Macro_Check_Bit_Set(USART2->SR, 5U))
+  if (Uart_Data_In)
   {
-    return (char)USART2->DR;
+    Uart_Data_In = 0;
+    return (char)Uart_Data;
+  }
+  return 0;
+}
+
+// USART2 수신 인터럽트 활성화/비활성화
+void Uart2_RX_Interrupt_Enable(int enable)
+{
+  if (enable)
+  {
+    Macro_Set_Bit(USART2->CR1, 5U); // RXNEIE 비트 Set
+    NVIC_ClearPendingIRQ(USART2_IRQn);
+    NVIC_EnableIRQ(USART2_IRQn);
   }
   else
   {
-    return (char)0;
+    Macro_Clear_Bit(USART2->CR1, 5U); // RXNEIE 비트 Clear
+    NVIC_DisableIRQ(USART2_IRQn);
   }
 }
 

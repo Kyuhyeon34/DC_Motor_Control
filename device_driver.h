@@ -8,7 +8,8 @@
 extern void Uart2_Init(int baud);
 extern void Uart2_Send_Byte(char data);
 extern char Uart2_Receive_Byte(void);
-extern char Uart2_Get_Pressed(void);
+extern char Uart2_Read_Byte(void);
+extern void Uart2_RX_Interrupt_Enable(int enable);
 
 extern void Uart1_Init(int baud);
 extern void Uart1_Send_Byte(char data);
