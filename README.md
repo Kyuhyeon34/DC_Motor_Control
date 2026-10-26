@@ -1,8 +1,7 @@
-# stm32-motor-project
-STM32 DC Motor Controller Team Project
+# 상태머신 기반 이송 장비 DC 모터 제어 시스템
 [자세한 구현 내용은 Notion 문서를 참고하세요.](https://blushing-addition-5ca.notion.site/v3-0-3a51d46c18fc80859512f7798826be27?pvs=74)
 
-# STM32F411RE DC Motor Control Project
+## STM32F411RE DC Motor Control Project
 ```mermaid
 stateDiagram-v2
     direction LR
